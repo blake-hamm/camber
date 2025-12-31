@@ -4,7 +4,7 @@ import { CamberPanel } from './panels/CamberPanel';
 export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		vscode.commands.registerCommand('camber.start', () => {
-			CamberPanel.createOrShow(context.extensionUri);
+			CamberPanel.create(context.extensionUri);
 		})
 	);
 

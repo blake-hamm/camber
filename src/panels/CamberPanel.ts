@@ -3,41 +3,30 @@ import { getNonce } from '../utils/getNonce';
 import { getWebviewOptions } from '../utils/getWebviewOptions';
 
 export class CamberPanel {
-	/**
-	 * Track the currently panel. Only allow a single panel to exist at a time.
-	 */
-	public static currentPanel: CamberPanel | undefined;
-
 	public static readonly viewType = 'camber';
 
 	private readonly _panel: vscode.WebviewPanel;
 	private readonly _extensionUri: vscode.Uri;
 	private _disposables: vscode.Disposable[] = [];
 
-	public static createOrShow(extensionUri: vscode.Uri) {
+	public static create(extensionUri: vscode.Uri) {
 		const column = vscode.window.activeTextEditor
 			? vscode.window.activeTextEditor.viewColumn
 			: undefined;
 
-		// If we already have a panel, show it.
-		if (CamberPanel.currentPanel) {
-			CamberPanel.currentPanel._panel.reveal(column);
-			return;
-		}
-
-		// Otherwise, create a new panel.
+		// Create a new panel.
 		const panel = vscode.window.createWebviewPanel(
 			CamberPanel.viewType,
 			'camber: AI assist',
 			column || vscode.ViewColumn.One,
-			getWebviewOptions(extensionUri),
+			getWebviewOptions(extensionUri)
 		);
 
-		CamberPanel.currentPanel = new CamberPanel(panel, extensionUri);
+		new CamberPanel(panel, extensionUri);
 	}
 
 	public static revive(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
-		CamberPanel.currentPanel = new CamberPanel(panel, extensionUri);
+		new CamberPanel(panel, extensionUri);
 	}
 
 	private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
@@ -51,20 +40,9 @@ export class CamberPanel {
 		// This happens when the user closes the panel or when the panel is closed programmatically
 		this._panel.onDidDispose(() => this.dispose(), null, this._disposables);
 
-		// Update the content based on view changes
-		this._panel.onDidChangeViewState(
-			() => {
-				if (this._panel.visible) {
-					this._update();
-				}
-			},
-			null,
-			this._disposables
-		);
-
 		// Handle messages from the webview
 		this._panel.webview.onDidReceiveMessage(
-			message => {
+			(message) => {
 				switch (message.command) {
 					case 'alert':
 						vscode.window.showErrorMessage(message.text);
@@ -77,8 +55,6 @@ export class CamberPanel {
 	}
 
 	public dispose() {
-		CamberPanel.currentPanel = undefined;
-
 		// Clean up our resources
 		this._panel.dispose();
 

@@ -8,6 +8,14 @@
     const chatHistory = /** @type {HTMLElement} */ (document.getElementById('chat-history'));
     const chatInput = /** @type {HTMLInputElement} */ (document.getElementById('chat-input'));
 
+    const oldState = vscode.getState() || { chat: '', todo: '' };
+    if (chatHistory) {
+      chatHistory.innerHTML = oldState.chat;
+    }
+    if (todoList) {
+      todoList.innerHTML = oldState.todo;
+    }
+
     if (chatInput && todoList && chatHistory) {
       // Handle chat input
       chatInput.addEventListener('keydown', (event) => {
@@ -25,6 +33,7 @@
                   command: 'newChatMessage',
                   text: message
               });
+              vscode.setState({ chat: chatHistory.innerHTML, todo: todoList.innerHTML });
           }
       });
   
@@ -43,6 +52,7 @@
                   todoList.appendChild(todoItem);
                   break;
           }
+          vscode.setState({ chat: chatHistory.innerHTML, todo: todoList.innerHTML });
       });
     }
 }());
