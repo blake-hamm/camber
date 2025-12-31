@@ -2,6 +2,19 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "type": "npm",
+      "script": "compile",
+      "label": "npm: compile",
+      "problemMatcher": [
+        "$eslint-compact"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "detail": "Runs the compile script to build the extension."
+    },
+    {
       "label": "watch",
       "dependsOn": [
         "npm: watch:tsc",
@@ -10,10 +23,7 @@
       "presentation": {
         "reveal": "never"
       },
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      }
+      "group": "build"
     },
     {
       "type": "npm",
