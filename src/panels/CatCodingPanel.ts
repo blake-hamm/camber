@@ -39,7 +39,7 @@ export class CatCodingPanel {
 		// Otherwise, create a new panel.
 		const panel = vscode.window.createWebviewPanel(
 			CatCodingPanel.viewType,
-			'Cat Coding',
+			'camber: AI assist',
 			column || vscode.ViewColumn.One,
 			getWebviewOptions(extensionUri),
 		);
@@ -109,30 +109,11 @@ export class CatCodingPanel {
 
 	private _update() {
 		const webview = this._panel.webview;
-
-		// Vary the webview's content based on where it is located in the editor.
-		switch (this._panel.viewColumn) {
-			case vscode.ViewColumn.Two:
-				this._updateForCat(webview, 'Compiling Cat');
-				return;
-
-			case vscode.ViewColumn.Three:
-				this._updateForCat(webview, 'Testing Cat');
-				return;
-
-			case vscode.ViewColumn.One:
-			default:
-				this._updateForCat(webview, 'Coding Cat');
-				return;
-		}
+    this._panel.title = "camber: AI assist";
+    this._panel.webview.html = this._getHtmlForWebview(webview);
 	}
 
-	private _updateForCat(webview: vscode.Webview, catName: keyof typeof cats) {
-		this._panel.title = catName;
-		this._panel.webview.html = this._getHtmlForWebview(webview, cats[catName]);
-	}
-
-	private _getHtmlForWebview(webview: vscode.Webview, catGifPath: string) {
+	private _getHtmlForWebview(webview: vscode.Webview) {
 		// Local path to main script run in the webview
 		const scriptPathOnDisk = vscode.Uri.joinPath(this._extensionUri, 'media', 'js', 'main.js');
 
@@ -166,11 +147,19 @@ export class CatCodingPanel {
 				<link href="${stylesResetUri}" rel="stylesheet">
 				<link href="${stylesMainUri}" rel="stylesheet">
 
-				<title>Cat Coding</title>
+				<title>camber: AI assist</title>
 			</head>
 			<body>
-				<img src="${catGifPath}" width="300" />
-				<h1 id="lines-of-code-counter">0</h1>
+        <div class="container">
+          <div class="todo-list">
+            <h2>Todo List</h2>
+            <ul id="todo-items"></ul>
+          </div>
+          <div class="chat-interface">
+            <div id="chat-history"></div>
+            <input type="text" id="chat-input" placeholder="Type your message...">
+          </div>
+        </div>
 
 				<script nonce="${nonce}" src="${scriptUri}"></script>
 			</body>

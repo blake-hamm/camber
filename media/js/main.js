@@ -4,38 +4,45 @@
 (function () {
     const vscode = acquireVsCodeApi();
 
-    const oldState = /** @type {{ count: number} | undefined} */ (vscode.getState());
+    const todoList = /** @type {HTMLElement} */ (document.getElementById('todo-items'));
+    const chatHistory = /** @type {HTMLElement} */ (document.getElementById('chat-history'));
+    const chatInput = /** @type {HTMLInputElement} */ (document.getElementById('chat-input'));
 
-    const counter = /** @type {HTMLElement} */ (document.getElementById('lines-of-code-counter'));
-    console.log('Initial state', oldState);
-
-    let currentCount = (oldState && oldState.count) || 0;
-    counter.textContent = `${currentCount}`;
-
-    setInterval(() => {
-        counter.textContent = `${currentCount++} `;
-
-        // Update state
-        vscode.setState({ count: currentCount });
-
-        // Alert the extension when the cat introduces a bug
-        if (Math.random() < Math.min(0.001 * currentCount, 0.05)) {
-            // Send a message back to the extension
-            vscode.postMessage({
-                command: 'alert',
-                text: '🐛  on line ' + currentCount
-            });
-        }
-    }, 100);
-
-    // Handle messages sent from the extension to the webview
-    window.addEventListener('message', event => {
-        const message = event.data; // The json data that the extension sent
-        switch (message.command) {
-            case 'refactor':
-                currentCount = Math.ceil(currentCount * 0.5);
-                counter.textContent = `${currentCount}`;
-                break;
-        }
-    });
+    if (chatInput && todoList && chatHistory) {
+      // Handle chat input
+      chatInput.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter') {
+              const message = chatInput.value;
+              chatInput.value = '';
+  
+              // Add user message to chat history
+              const userMessage = document.createElement('div');
+              userMessage.textContent = `You: ${message}`;
+              chatHistory.appendChild(userMessage);
+  
+              // Send message to extension
+              vscode.postMessage({
+                  command: 'newChatMessage',
+                  text: message
+              });
+          }
+      });
+  
+      // Handle messages from the extension
+      window.addEventListener('message', event => {
+          const message = event.data;
+          switch (message.command) {
+              case 'aiResponse':
+                  const aiMessage = document.createElement('div');
+                  aiMessage.textContent = `AI: ${message.text}`;
+                  chatHistory.appendChild(aiMessage);
+                  break;
+              case 'updateTodo':
+                  const todoItem = document.createElement('li');
+                  todoItem.textContent = message.text;
+                  todoList.appendChild(todoItem);
+                  break;
+          }
+      });
+    }
 }());
