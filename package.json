@@ -10,20 +10,15 @@
     "Other"
   ],
   "activationEvents": [
-    "onWebviewPanel:catCoding"
+    "onWebviewPanel:camber"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "catCoding.start",
-        "title": "Start cat coding session",
-        "category": "Cat Coding"
-      },
-      {
-        "command": "catCoding.doRefactor",
-        "title": "Do some refactoring",
-        "category": "Cat Coding"
+        "command": "camber.start",
+        "title": "Start Session",
+        "category": "camber"
       }
     ]
   },

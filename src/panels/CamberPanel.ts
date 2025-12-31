@@ -2,24 +2,13 @@ import * as vscode from 'vscode';
 import { getNonce } from '../utils/getNonce';
 import { getWebviewOptions } from '../utils/getWebviewOptions';
 
-const cats = {
-	'Coding Cat': 'https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif',
-	'Compiling Cat': 'https://media.giphy.com/media/mlvseq9yvZhba/giphy.gif',
-	'Testing Cat': 'https://media.giphy.com/media/3oriO0OEd9QIDdllqo/giphy.gif'
-};
-
-
-
-/**
- * Manages cat coding webview panels
- */
-export class CatCodingPanel {
+export class CamberPanel {
 	/**
 	 * Track the currently panel. Only allow a single panel to exist at a time.
 	 */
-	public static currentPanel: CatCodingPanel | undefined;
+	public static currentPanel: CamberPanel | undefined;
 
-	public static readonly viewType = 'catCoding';
+	public static readonly viewType = 'camber';
 
 	private readonly _panel: vscode.WebviewPanel;
 	private readonly _extensionUri: vscode.Uri;
@@ -31,24 +20,24 @@ export class CatCodingPanel {
 			: undefined;
 
 		// If we already have a panel, show it.
-		if (CatCodingPanel.currentPanel) {
-			CatCodingPanel.currentPanel._panel.reveal(column);
+		if (CamberPanel.currentPanel) {
+			CamberPanel.currentPanel._panel.reveal(column);
 			return;
 		}
 
 		// Otherwise, create a new panel.
 		const panel = vscode.window.createWebviewPanel(
-			CatCodingPanel.viewType,
+			CamberPanel.viewType,
 			'camber: AI assist',
 			column || vscode.ViewColumn.One,
 			getWebviewOptions(extensionUri),
 		);
 
-		CatCodingPanel.currentPanel = new CatCodingPanel(panel, extensionUri);
+		CamberPanel.currentPanel = new CamberPanel(panel, extensionUri);
 	}
 
 	public static revive(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
-		CatCodingPanel.currentPanel = new CatCodingPanel(panel, extensionUri);
+		CamberPanel.currentPanel = new CamberPanel(panel, extensionUri);
 	}
 
 	private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
@@ -87,14 +76,8 @@ export class CatCodingPanel {
 		);
 	}
 
-	public doRefactor() {
-		// Send a message to the webview webview.
-		// You can send any JSON serializable data.
-		this._panel.webview.postMessage({ command: 'refactor' });
-	}
-
 	public dispose() {
-		CatCodingPanel.currentPanel = undefined;
+		CamberPanel.currentPanel = undefined;
 
 		// Clean up our resources
 		this._panel.dispose();

@@ -1,24 +1,16 @@
 import * as vscode from 'vscode';
-import { CatCodingPanel } from './panels/CatCodingPanel';
+import { CamberPanel } from './panels/CamberPanel';
 
 export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
-		vscode.commands.registerCommand('catCoding.start', () => {
-			CatCodingPanel.createOrShow(context.extensionUri);
-		})
-	);
-
-	context.subscriptions.push(
-		vscode.commands.registerCommand('catCoding.doRefactor', () => {
-			if (CatCodingPanel.currentPanel) {
-				CatCodingPanel.currentPanel.doRefactor();
-			}
+		vscode.commands.registerCommand('camber.start', () => {
+			CamberPanel.createOrShow(context.extensionUri);
 		})
 	);
 
 	if (vscode.window.registerWebviewPanelSerializer) {
 		// Make sure we register a serializer in activation event
-		vscode.window.registerWebviewPanelSerializer(CatCodingPanel.viewType, {
+		vscode.window.registerWebviewPanelSerializer(CamberPanel.viewType, {
 			async deserializeWebviewPanel(webviewPanel: vscode.WebviewPanel, state: unknown) {
 				console.log(`Got state: ${state}`);
 				// Reset the webview options so we use latest uri for `localResourceRoots`.
@@ -28,7 +20,7 @@ export function activate(context: vscode.ExtensionContext) {
 					// And restrict the webview to only loading content from our extension's `media` directory.
 					localResourceRoots: [vscode.Uri.joinPath(context.extensionUri, 'media')]
 				};
-				CatCodingPanel.revive(webviewPanel, context.extensionUri);
+				CamberPanel.revive(webviewPanel, context.extensionUri);
 			}
 		});
 	}
