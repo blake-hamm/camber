@@ -47,6 +47,9 @@ export class CamberPanel {
 					case 'alert':
 						vscode.window.showErrorMessage(message.text);
 						return;
+					case 'camber.openSettings':
+						vscode.commands.executeCommand('workbench.action.openSettings', 'camber');
+						return;
 				}
 			},
 			null,
@@ -109,6 +112,8 @@ export class CamberPanel {
 				<title>camber: AI assist</title>
 			</head>
 			<body>
+        <button id="settings-button">Settings</button>
+
         <div class="container">
           <div class="todo-list">
             <h2>Todo List</h2>

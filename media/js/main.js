@@ -4,6 +4,7 @@
 (function () {
     const vscode = acquireVsCodeApi();
 
+    const settingsButton = /** @type {HTMLElement} */ (document.getElementById('settings-button'));
     const todoList = /** @type {HTMLElement} */ (document.getElementById('todo-items'));
     const chatHistory = /** @type {HTMLElement} */ (document.getElementById('chat-history'));
     const chatInput = /** @type {HTMLInputElement} */ (document.getElementById('chat-input'));
@@ -14,6 +15,14 @@
     }
     if (todoList) {
       todoList.innerHTML = oldState.todo;
+    }
+
+    if (settingsButton) {
+      settingsButton.addEventListener('click', () => {
+        vscode.postMessage({
+          command: 'camber.openSettings'
+        });
+      });
     }
 
     if (chatInput && todoList && chatHistory) {
