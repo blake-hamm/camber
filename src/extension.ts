@@ -1,10 +1,36 @@
 import * as vscode from 'vscode';
 import { CamberPanel } from './panels/CamberPanel';
+import { ConfigService } from './utils/config';
 
 export function activate(context: vscode.ExtensionContext) {
+	const configService = new ConfigService(context);
+
 	context.subscriptions.push(
 		vscode.commands.registerCommand('camber.start', () => {
 			CamberPanel.create(context.extensionUri);
+		})
+	);
+
+	context.subscriptions.push(
+		vscode.commands.registerCommand('camber.updateSettings', async () => {
+			const endpoint = await vscode.window.showInputBox({
+				prompt: 'Enter the API endpoint',
+				value: configService.getEndpoint(),
+			});
+			const model = await vscode.window.showInputBox({
+				prompt: 'Enter the model name',
+				value: configService.getModel(),
+			});
+			const apiKey = await vscode.window.showInputBox({
+				prompt: 'Enter your API key',
+				password: true,
+				value: await configService.getApiKey(),
+			});
+
+			if (endpoint && model && apiKey) {
+				await configService.saveSettings(endpoint, model, apiKey);
+				vscode.window.showInformationMessage('Camber settings saved successfully.');
+			}
 		})
 	);
 

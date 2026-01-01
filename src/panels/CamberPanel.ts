@@ -48,7 +48,7 @@ export class CamberPanel {
 						vscode.window.showErrorMessage(message.text);
 						return;
 					case 'camber.openSettings':
-						vscode.commands.executeCommand('workbench.action.openSettings', 'camber');
+						vscode.commands.executeCommand('camber.updateSettings');
 						return;
 				}
 			},
@@ -112,18 +112,17 @@ export class CamberPanel {
 				<title>camber: AI assist</title>
 			</head>
 			<body>
-        <button id="settings-button">Settings</button>
-
-        <div class="container">
-          <div class="todo-list">
-            <h2>Todo List</h2>
-            <ul id="todo-items"></ul>
-          </div>
-          <div class="chat-interface">
-            <div id="chat-history"></div>
-            <input type="text" id="chat-input" placeholder="Type your message...">
-          </div>
-        </div>
+				<div class="container">
+					<div class="todo-list">
+						<h2>Todo List</h2>
+						<ul id="todo-items"></ul>
+						<button id="settings-button">Settings</button>
+					</div>
+					<div class="chat-interface">
+						<div id="chat-history"></div>
+						<input type="text" id="chat-input" placeholder="Type your message...">
+					</div>
+				</div>
 
 				<script nonce="${nonce}" src="${scriptUri}"></script>
 			</body>

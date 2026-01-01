@@ -28,6 +28,12 @@ body {
   padding: 20px;
   border-right: 1px solid var(--vscode-editor-foreground);
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+#todo-items {
+  flex-grow: 1;
 }
 
 .chat-interface {
