@@ -48,5 +48,8 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.48.1",
     "vscode-webview": "^1.0.1-beta.1"
+  },
+  "dependencies": {
+    "@ax-llm/ax": "^16.0.4"
   }
 }
